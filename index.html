@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login">
+    <input id="codeInput" placeholder="Enter Special Code">
+    <button id="loginBtn">Login</button>
+  </div>
+
+  <div id="posts"></div>
+
+  <script type="module">
+    import { db } from "./script.js";
+    import { ref, get, set, onValue } from "[gstatic.com](https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js)";
+
+    const codeInput = document.getElementById("codeInput");
+    const loginBtn = document.getElementById("loginBtn");
+    const postsDiv = document.getElementById("posts");
+
+    loginBtn.onclick = async () => {
+      const code = codeInput.value.trim().toUpperCase();
+      const snap = await get(ref(db, "codes/" + code));
+      if (snap.exists()) {
+        const data = snap.val();
+        if (Date.now() < data.expiry) {
+          localStorage.setItem("authCode", code);
+          localStorage.setItem("expiry", data.expiry);
+          location.reload();
+        } else alert("Code expired");
+      } else alert("Invalid code");
+    };
+
+    const savedCode = localStorage.getItem("authCode");
+    const savedExpiry = localStorage.getItem("expiry");
+
+    if (savedCode && Date.now() < savedExpiry) {
+      onValue(ref(db, "posts"), (snapshot) => {
+        postsDiv.innerHTML = "";
+        const posts = snapshot.val() || {};
+        Object.values(posts).forEach(p => {
+          const div = document.createElement("div");
+          div.textContent = p.message;
+          postsDiv.appendChild(div);
+        });
+      });
+
+      // Track activity
+      set(ref(db, `users/${savedCode}`), { lastActive: Date.now() });
+      setInterval(() => {
+        set(ref(db, `users/${savedCode}`), { lastActive: Date.now() });
+      }, 60000);
+    } else {
+      localStorage.clear();
+    }
+  </script>
+</body>
+</html>
