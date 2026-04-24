@@ -1,61 +1,715 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <title>User Portal</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Chat - Admin & User App</title>
+    
+    <!-- <!-- CSS PART START (Agar alag file chahiye to ye style.css mein save karein) --> -->
+    <style>
+        :root {
+            --primary: #00e676; /* Green */
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            --danger: #ff5252;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Container --- */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--card-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        @media (min-width: 500px) {
+            .app-container {
+                min-height: auto;
+                height: 90vh;
+                border-radius: 15px;
+                overflow: hidden;
+            }
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(45deg, #000000, #2a2a2a);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- Screens Management --- */
+        .screen {
+            display: none; /* Sabhi screens hidden hain initially */
+            flex: 1;
+            padding: 20px;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Forms & Inputs --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c2c2c;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.secondary {
+            background-color: #444;
+            color: white;
+            margin-top: 10px;
+        }
+
+        button.danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* --- Cards & Lists --- */
+        .card {
+            background-color: #2c2c2c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .timestamp {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 8px;
+            display: block;
+            text-align: right;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 50px;
+            font-style: italic;
+        }
+
+        /* --- Admin Tabs --- */
+        .admin-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 10px;
+            background: #333;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: black;
+        }
+
+        /* --- Toast Notification --- */
+        .toast {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* --- Loading Spinner --- */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+    <!-- <!-- CSS PART END --> -->
 </head>
 <body>
-  <div id="login">
-    <input id="codeInput" placeholder="Enter Special Code">
-    <button id="loginBtn">Login</button>
-  </div>
 
-  <div id="posts"></div>
+    <div class="app-container">
+        <header>
+            <h1>Safe Chat</h1>
+        </header>
 
-  <script type="module">
-    import { db } from "./script.js";
-    import { ref, get, set, onValue } from "[gstatic.com](https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js)";
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="toast">Message here</div>
 
-    const codeInput = document.getElementById("codeInput");
-    const loginBtn = document.getElementById("loginBtn");
-    const postsDiv = document.getElementById("posts");
+        <!-- SCREEN 1: LOGIN -->
+        <div id="login-screen" class="screen active">
+            <h2 style="text-align: center; margin-bottom: 20px;">Login Required</h2>
+            <div class="form-group">
+                <label>Enter Special Code</label>
+                <input type="text" id="login-code" placeholder="Ex: ADMIN or 1234-ABCD">
+            </div>
+            <button onclick="handleLogin()">Login Now</button>
+            <p style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #666;">
+                Note: Type 'admin' for Admin Access.
+            </p>
+        </div>
 
-    loginBtn.onclick = async () => {
-      const code = codeInput.value.trim().toUpperCase();
-      const snap = await get(ref(db, "codes/" + code));
-      if (snap.exists()) {
-        const data = snap.val();
-        if (Date.now() < data.expiry) {
-          localStorage.setItem("authCode", code);
-          localStorage.setItem("expiry", data.expiry);
-          location.reload();
-        } else alert("Code expired");
-      } else alert("Invalid code");
-    };
+        <!-- SCREEN 2: ADMIN PANEL -->
+        <div id="admin-screen" class="screen">
+            <div class="admin-nav">
+                <button class="nav-btn active" onclick="switchAdminTab('codes')">Codes</button>
+                <button class="nav-btn" onclick="switchAdminTab('post')">Post Signal</button>
+                <button class="nav-btn" onclick="switchAdminTab('users')">Users</button>
+            </div>
 
-    const savedCode = localStorage.getItem("authCode");
-    const savedExpiry = localStorage.getItem("expiry");
+            <!-- Tab: Generate Codes -->
+            <div id="tab-codes" class="admin-tab">
+                <h3>Generate Code</h3>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Validity (Days)</label>
+                    <select id="code-duration">
+                        <option value="7">7 Days</option>
+                        <option value="10">10 Days</option>
+                        <option value="30">30 Days</option>
+                    </select>
+                </div>
+                <button onclick="generateCode()">Generate New Code</button>
+                
+                <div style="margin-top: 30px;">
+                    <h4>Active Codes</h4>
+                    <div id="codes-list" class="codes-list-container">
+                        <!-- Codes yahan aayenge -->
+                    </div>
+                </div>
+            </div>
 
-    if (savedCode && Date.now() < savedExpiry) {
-      onValue(ref(db, "posts"), (snapshot) => {
-        postsDiv.innerHTML = "";
-        const posts = snapshot.val() || {};
-        Object.values(posts).forEach(p => {
-          const div = document.createElement("div");
-          div.textContent = p.message;
-          postsDiv.appendChild(div);
-        });
-      });
+            <!-- Tab: Post Signal -->
+            <div id="tab-post" class="admin-tab" style="display: none;">
+                <h3>Send Signal</h3>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Message</label>
+                    <textarea id="signal-msg" rows="4" placeholder="Type your signal here..."></textarea>
+                </div>
+                <button onclick="postSignal()">Post Now (Auto Delete after 24h)</button>
+                
+                <div style="margin-top: 30px;">
+                    <h4>Current Active Signals</h4>
+                    <div id="admin-posts-list">
+                        <!-- Posts list for admin -->
+                    </div>
+                </div>
+            </div>
 
-      // Track activity
-      set(ref(db, `users/${savedCode}`), { lastActive: Date.now() });
-      setInterval(() => {
-        set(ref(db, `users/${savedCode}`), { lastActive: Date.now() });
-      }, 60000);
-    } else {
-      localStorage.clear();
-    }
-  </script>
+            <!-- Tab: Users -->
+            <div id="tab-users" class="admin-tab" style="display: none;">
+                <h3>Active Users</h3>
+                <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Users currently logged in with valid codes.</p>
+                <div id="users-list">
+                    <!-- Users list -->
+                </div>
+            </div>
+
+            <button class="danger" onclick="logout()" style="margin-top: auto;">Logout</button>
+        </div>
+
+        <!-- SCREEN 3: USER PANEL -->
+        <div id="user-screen" class="screen">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Live Signals</h3>
+                <span id="session-timer" style="font-size: 0.8rem; color: var(--primary);">Checking...</span>
+            </div>
+            
+            <div class="loader" id="feed-loader"></div>
+            <div id="signals-feed">
+                <!-- Signals yahan dikheinenge -->
+                <div class="empty-state">Connecting to server...</div>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 20px;">
+                <button class="secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <!-- SCRIPT PART START (Agar alag file chahiye to ye script.js mein save karein) --> -->
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+        // --- 1. CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqfguS1ucAtklcl06eB1JIWQr46XMpe7g",
+            authDomain: "safe-chat-c0b9c.firebaseapp.com",
+            databaseURL: "https://safe-chat-c0b9c-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "safe-chat-c0b9c",
+            storageBucket: "safe-chat-c0b9c.appspot.com",
+            messagingSenderId: "119640275300",
+            appId: "1:119640275300:web:20ae984f4af1ffe6a62271"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Global State
+        let currentUserCode = null;
+        let currentUserRole = null; // 'admin' or 'user'
+        let sessionExpiryTime = 0;
+
+        // --- 2. UTILITY FUNCTIONS ---
+        
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function timeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return "Just now";
+        }
+
+        // --- 3. LOGIC: LOGIN & AUTH ---
+
+        window.handleLogin = async () => {
+            const inputCode = document.getElementById('login-code').value.trim().toUpperCase();
+            
+            if (!inputCode) {
+                showToast("Please enter a code");
+                return;
+            }
+
+            // Admin Hardcoded Check (Demo purpose)
+            if (inputCode === 'ADMIN') {
+                currentUserRole = 'admin';
+                switchScreen('admin-screen');
+                loadAdminData();
+                showToast("Welcome Admin");
+                return;
+            }
+
+            // User Code Validation
+            const codeRef = ref(db, 'codes/' + inputCode);
+            const snapshot = await get(codeRef);
+
+            if (snapshot.exists()) {
+                const codeData = snapshot.val();
+                const now = Date.now();
+                
+                // Check Expiry
+                if (now > codeData.expiresAt) {
+                    showToast("Code has expired!");
+                    // Optional: Delete expired code
+                    remove(codeRef);
+                    return;
+                }
+
+                // Login Successful
+                currentUserCode = inputCode;
+                currentUserRole = 'user';
+                sessionExpiryTime = codeData.expiresAt;
+                
+                // Update Last Seen
+                update(ref(db, 'users/' + inputCode), {
+                    lastSeen: now,
+                    status: 'online'
+                });
+
+                // Save session to localstorage for auto-login
+                localStorage.setItem('safe_chat_code', inputCode);
+
+                switchScreen('user-screen');
+                loadUserFeed();
+                startSessionCheck();
+                
+            } else {
+                showToast("Invalid Code!");
+            }
+        };
+
+        window.logout = () => {
+            if (currentUserRole === 'user' && currentUserCode) {
+                // Update status to offline
+                update(ref(db, 'users/' + currentUserCode), {
+                    status: 'offline'
+                });
+            }
+            localStorage.removeItem('safe_chat_code');
+            currentUserCode = null;
+            currentUserRole = null;
+            document.getElementById('login-code').value = '';
+            switchScreen('login-screen');
+            showToast("Logged Out");
+        };
+
+        // --- 4. LOGIC: SESSION MANAGEMENT ---
+
+        function startSessionCheck() {
+            const timerEl = document.getElementById('session-timer');
+            
+            const checkInterval = setInterval(() => {
+                if (!currentUserCode || currentUserRole !== 'user') {
+                    clearInterval(checkInterval);
+                    return;
+                }
+
+                const now = Date.now();
+                const timeLeft = sessionExpiryTime - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(checkInterval);
+                    showToast("Session Expired");
+                    logout();
+                } else {
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    timerEl.textContent = `Expires in: ${days}d ${hours}h`;
+                }
+            }, 1000); // Update every second
+        }
+
+        // Auto Login on Load
+        window.onload = () => {
+            const savedCode = localStorage.getItem('safe_chat_code');
+            if (savedCode) {
+                document.getElementById('login-code').value = savedCode;
+                handleLogin();
+            }
+        };
+
+        // --- 5. LOGIC: ADMIN FEATURES ---
+
+        window.switchAdminTab = (tabName) => {
+            // Hide all tabs
+            document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById('tab-' + tabName).style.display = 'block';
+            // Highlight button (simple logic based on order or text content could be better but this works for 3 btns)
+            const btns = document.querySelectorAll('.nav-btn');
+            if(tabName === 'codes') btns[0].classList.add('active');
+            if(tabName === 'post') btns[1].classList.add('active');
+            if(tabName === 'users') btns[2].classList.add('active');
+        };
+
+        function loadAdminData() {
+            // Listen for codes
+            onValue(ref(db, 'codes'), (snapshot) => {
+                const list = document.getElementById('codes-list');
+                list.innerHTML = '';
+                const data = snapshot.val();
+                if (!data) {
+                    list.innerHTML = '<div class="empty-state">No codes generated yet.</div>';
+                    return;
+                }
+
+                Object.keys(data).forEach(key => {
+                    const code = data[key];
+                    const isExpired = Date.now() > code.expiresAt;
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.style.borderLeftColor = isExpired ? '#555' : 'var(--primary)';
+                    div.innerHTML = `
+                        <h3>${key} ${isExpired ? '(Expired)' : ''}</h3>
+                        <p>Days: ${code.durationDays}</p>
+                        <span class="timestamp">Created: ${formatDate(code.createdAt)}</span>
+                    `;
+                    list.appendChild(div);
+                });
+            });
+
+            // Listen for users
+            onValue(ref(db, 'users'), (snapshot) => {
+                const list = document.getElementById('users-list');
+                list.innerHTML = '';
+                const data = snapshot.val();
+                if (!data) {
+                    list.innerHTML = '<div class="empty-state">No active users.</div>';
+                    return;
+                }
+
+                Object.keys(data).forEach(key => {
+                    const user = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerHTML = `
+                        <h3>User: ${key}</h3>
+                        <p>Status: <span style="color:${user.status === 'online' ? '#00e676' : '#ff5252'}">${user.status}</span></p>
+                        <span class="timestamp">Last Active: ${timeAgo(user.lastSeen)}</span>
+                    `;
+                    list.appendChild(div);
+                });
+            });
+
+            // Listen for posts (for Admin view)
+            onValue(ref(db, 'posts'), (snapshot) => {
+                const list = document.getElementById('admin-posts-list');
+                list.innerHTML = '';
+                const data = snapshot.val();
+                if(!data) {
+                    list.innerHTML = '<div class="empty-state">No signals sent.</div>';
+                    return;
+                }
+                // Convert to array and sort new to old
+                const postsArray = Object.entries(data).sort((a,b) => b[1].timestamp - a[1].timestamp);
+                
+                postsArray.forEach(([key, post]) => {
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerHTML = `
+                        <p>${post.text}</p>
+                        <span class="timestamp">${formatDate(post.timestamp)}</span>
+                    `;
+                    list.appendChild(div);
+                });
+            });
+            
+            // Initial Cleanup of old posts
+            cleanupExpiredPosts();
+        }
+
+        window.generateCode = async () => {
+            const duration = parseInt(document.getElementById('code-duration').value);
+            const code = generateRandomString(6); // e.g. "A1B2C3"
+            const now = Date.now();
+            const expiresAt = now + (duration * 24 * 60 * 60 * 1000);
+
+            await set(ref(db, 'codes/' + code), {
+                createdAt: now,
+                durationDays: duration,
+                expiresAt: expiresAt
+            });
+
+            showToast("Code Generated: " + code);
+        };
+
+        window.postSignal = async () => {
+            const msg = document.getElementById('signal-msg').value.trim();
+            if (!msg) {
+                showToast("Message cannot be empty");
+                return;
+            }
+
+            const now = Date.now();
+            // Store post
+            await push(ref(db, 'posts'), {
+                text: msg,
+                timestamp: now
+            });
+
+            document.getElementById('signal-msg').value = '';
+            showToast("Signal Posted Successfully");
+        };
+
+        // --- 6. LOGIC: USER FEATURES ---
+
+        function loadUserFeed() {
+            const feedContainer = document.getElementById('signals-feed');
+            const loader = document.getElementById('feed-loader');
+            
+            loader.style.display = 'block';
+
+            onValue(ref(db, 'posts'), (snapshot) => {
+                loader.style.display = 'none';
+                feedContainer.innerHTML = '';
+                
+                cleanupExpiredPosts(); // Ensure deleted
+
+                const data = snapshot.val();
+                if (!data) {
+                    feedContainer.innerHTML = '<div class="empty-state" style="font-size:1.2rem; color: #00e676;">Signal Coming Soon...</div>';
+                    return;
+                }
+
+                let hasContent = false;
+                // Sort: Newest first
+                const postsArray = Object.entries(data).sort((a,b) => b[1].timestamp - a[1].timestamp);
+
+                postsArray.forEach(([key, post]) => {
+                    hasContent = true;
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.style.borderLeft = "none";
+                    div.style.borderBottom = "2px solid var(--primary)";
+                    div.innerHTML = `
+                        <h3 style="color: var(--primary)">NEW SIGNAL</h3>
+                        <p style="font-size: 1.1rem; color: white; margin-top:10px;">${post.text}</p>
+                        <span class="timestamp">${formatDate(post.timestamp)}</span>
+                    `;
+                    feedContainer.appendChild(div);
+                });
+
+                if(!hasContent) {
+                    feedContainer.innerHTML = '<div class="empty-state" style="font-size:1.2rem; color: #00e676;">Signal Coming Soon...</div>';
+                }
+            });
+        }
+
+        // --- 7. SYSTEM LOGIC: AUTO DELETE POSTS ---
+        // Logic: Check all posts, if timestamp > 24h, remove them.
+        async function cleanupExpiredPosts() {
+            const postsRef = ref(db, 'posts');
+            const snapshot = await get(postsRef);
+            
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const now = Date.now();
+                const oneDayMs = 24 * 60 * 60 * 1000;
+                
+                let updates = {};
+                let dirty = false;
+
+                Object.keys(data).forEach(key => {
+                    if (now - data[key].timestamp > oneDayMs) {
+                        updates[key] = null; // Mark for deletion
+                        dirty = true;
+                    }
+                });
+
+                if (dirty) {
+                    await update(postsRef, updates);
+                    console.log("Cleaned up expired posts");
+                }
+            }
+        }
+
+    </script>
+    <!-- <!-- SCRIPT PART END --> -->
 </body>
 </html>
