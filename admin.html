@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body onload="trackActiveUsers()">
+  <h2>Admin Dashboard</h2>
+  <input id="days" placeholder="Days (7 or 10)">
+  <button onclick="generateCode(parseInt(document.getElementById('days').value))">Generate Code</button>
+
+  <h3>Add Post</h3>
+  <input id="postText" placeholder="Message...">
+  <button onclick="addPost(document.getElementById('postText').value)">Add</button>
+
+  <h3>Active Users</h3>
+  <div id="activeList"></div>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>
