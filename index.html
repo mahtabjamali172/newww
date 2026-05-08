@@ -1,737 +1,721 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safe Chat - Admin & User App</title>
-    
-    <!-- CSS PART START -->
+    <title>MAHTAB PREMIUM HACK</title>
     <style>
-        :root {
-            --primary: #00e676; /* Green */
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #ffffff;
-            --text-muted: #b0b0b0;
-            --danger: #ff5252;
-        }
-
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            align-items: flex-start;
+            background: #0a0a0f;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
         }
 
-        /* --- Container --- */
-        .app-container {
+        /* Animated background particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 480px;
-            background-color: var(--card-bg);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        @media (min-width: 500px) {
-            .app-container {
-                min-height: auto;
-                height: 90vh;
-                border-radius: 15px;
-                overflow: hidden;
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 165, 0, 0.3);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) translateX(20px) scale(1);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(-20px) scale(0.5);
+                opacity: 0;
             }
         }
 
-        /* --- Header --- */
-        header {
-            padding: 20px;
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            background: linear-gradient(45deg, #000000, #2a2a2a);
-            border-bottom: 2px solid var(--primary);
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
         }
 
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--primary);
+        /* Brand */
+        .brand {
+            font-size: 0.875rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
+            color: rgba(255, 165, 0, 0.6);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        /* Period Card */
+        .period-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 165, 0, 0.15);
+            border-radius: 24px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .period-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 165, 0, 0.03) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .period-card:hover {
+            border-color: rgba(255, 165, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .label {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .period-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffa500;
+            letter-spacing: 3px;
+            font-variant-numeric: tabular-nums;
+            position: relative;
+            text-shadow: 0 0 40px rgba(255, 165, 0, 0.3);
+            word-break: break-all;
+        }
+
+        .period-number.game {
+            font-size: 1.8rem;
             letter-spacing: 2px;
         }
 
-        /* --- Screens Management --- */
-        .screen {
-            display: none;
-            flex: 1;
-            padding: 20px;
-            flex-direction: column;
-            overflow-y: auto;
+        /* Timer Card */
+        .timer-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 24px;
+            padding: 2.5rem 3rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
         }
 
-        .screen.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
+        .timer-card:hover {
+            border-color: rgba(0, 255, 136, 0.3);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .timer-display {
+            font-size: 4.5rem;
+            font-weight: 200;
+            color: #00ff88;
+            letter-spacing: 6px;
+            font-variant-numeric: tabular-nums;
+            position: relative;
+            text-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+            line-height: 1;
         }
 
-        /* --- Forms & Inputs --- */
-        .form-group {
-            margin-bottom: 20px;
+        .timer-unit {
+            font-size: 0.875rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(0, 255, 136, 0.5);
+            margin-top: 0.5rem;
+            position: relative;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        /* Progress Ring */
+        .progress-ring-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 1.5rem;
         }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            background-color: #2c2c2c;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
+        .progress-ring {
+            transform: rotate(-90deg);
         }
 
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
+        .progress-ring-bg {
+            fill: none;
+            stroke: rgba(0, 255, 136, 0.08);
+            stroke-width: 6;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
+        .progress-ring-fill {
+            fill: none;
+            stroke: #00ff88;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s linear;
+            filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.5));
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
-        button.secondary {
-            background-color: #444;
-            color: white;
-            margin-top: 10px;
-        }
-
-        button.danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        button.small-btn {
-            padding: 6px;
-            font-size: 0.8rem;
-            margin-top: 8px;
-        }
-
-        /* --- Cards & Lists --- */
-        .card {
-            background-color: #2c2c2c;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--primary);
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        .card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        .timestamp {
-            font-size: 0.75rem;
-            color: #666;
-            margin-top: 8px;
-            display: block;
-            text-align: right;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            margin-top: 50px;
-            font-style: italic;
-        }
-
-        /* --- Admin Tabs --- */
-        .admin-nav {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .nav-btn {
-            flex: 1;
-            padding: 10px;
-            background: #333;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .nav-btn.active {
-            background: var(--primary);
-            color: black;
-        }
-
-        /* --- Toast Notification --- */
-        .toast {
+        .progress-text {
             position: absolute;
-            bottom: 20px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            white-space: nowrap;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .toast.show {
-            opacity: 1;
+            transform: translate(-50%, -50%);
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #00ff88;
+            font-variant-numeric: tabular-nums;
         }
 
-        /* --- Loading Spinner --- */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
+        /* Prediction Section */
+        .prediction-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            border-radius: 24px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.05), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .prediction-title {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(0, 150, 255, 0.6);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .prediction-result {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .prediction-result.BIG {
+            color: #ff4444;
+            text-shadow: 0 0 40px rgba(255, 68, 68, 0.4);
+        }
+
+        .prediction-result.SMALL {
+            color: #00ff88;
+            text-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+        }
+
+        .prediction-number {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.5rem;
+            position: relative;
+        }
+
+        .calculation-text {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 0.75rem;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        /* History Section */
+        .history-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2rem 2.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .history-title {
+            font-size: 0.875rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+        }
+
+        .history-table th {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+        }
+
+        .history-table td {
+            font-size: 0.85rem;
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .badge.BIG {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .badge.SMALL {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        /* Current Time */
+        .current-time {
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .timezone-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 165, 0, 0.1);
+            color: #ffa500;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            margin-top: 0.75rem;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-            display: none;
+            animation: pulse 1.5s ease-in-out infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* Scrollbar for history */
+        .history-scroll {
+            max-height: 320px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .history-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .history-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .history-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 165, 0, 0.3);
+            border-radius: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .period-number {
+                font-size: 1.5rem;
+                letter-spacing: 1px;
+            }
+            .period-number.game {
+                font-size: 1.2rem;
+            }
+            .period-card, .timer-card, .prediction-card, .history-card {
+                padding: 1.5rem 1rem;
+            }
+            .timer-display {
+                font-size: 3rem;
+            }
+            .progress-ring-container {
+                width: 140px;
+                height: 140px;
+            }
+            .progress-text {
+                font-size: 1.8rem;
+            }
+            .prediction-result {
+                font-size: 2.2rem;
+            }
+            .history-table th,
+            .history-table td {
+                font-size: 0.7rem;
+                padding: 0.5rem 0.25rem;
+            }
+        }
     </style>
-    <!-- CSS PART END -->
 </head>
 <body>
+    <!-- Background Animation -->
+    <div class="bg-animation" id="particles"></div>
 
-    <div class="app-container">
-        <header>
-            <h1>Safe Chat</h1>
-        </header>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="brand">ASHURA Timer</div>
 
-        <!-- TOAST NOTIFICATION -->
-        <div id="toast" class="toast">Message here</div>
-
-        <!-- SCREEN 1: LOGIN -->
-        <div id="login-screen" class="screen active">
-            <h2 style="text-align: center; margin-bottom: 20px;">Login Required</h2>
-            <div class="form-group">
-                <label>Enter Special Code</label>
-                <input type="text" id="login-code" placeholder="Ex: ADMIN or 1234-ABCD">
+        <!-- Game Period Number -->
+        <div class="period-card">
+            <div class="label">Game Period</div>
+            <div class="period-number game" id="gamePeriodNumber">Loading...</div>
+            <div class="timezone-badge" style="margin-top: 0.75rem;">
+                <span style="font-size: 1rem;">&#127759;</span>
+                UTC Sync (17 Digit)
             </div>
-            <button onclick="handleLogin()">Login Now</button>
-            <p style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #666;">
-                Note: Type 'admin' for Admin Access.
-            </p>
         </div>
 
-        <!-- SCREEN 2: ADMIN PANEL -->
-        <div id="admin-screen" class="screen">
-            <div class="admin-nav">
-                <button class="nav-btn active" onclick="switchAdminTab('codes')">Codes</button>
-                <button class="nav-btn" onclick="switchAdminTab('post')">Post Signal</button>
-                <button class="nav-btn" onclick="switchAdminTab('users')">Users</button>
+        <!-- Web Period Number -->
+        <div class="period-card">
+            <div class="label">Web Period</div>
+            <div class="period-number" id="webPeriodNumber">Loading...</div>
+            <div class="timezone-badge" style="margin-top: 0.75rem;">
+                <span style="font-size: 1rem;">&#128187;</span>
+                UTC Sync (13 Digit)
             </div>
-
-            <!-- Tab: Generate Codes -->
-            <div id="tab-codes" class="admin-tab">
-                <h3>Generate Code</h3>
-                <div class="form-group" style="margin-top: 15px;">
-                    <label>Validity (Days)</label>
-                    <select id="code-duration">
-                        <option value="7">7 Days</option>
-                        <option value="10">10 Days</option>
-                        <option value="30">30 Days</option>
-                    </select>
-                </div>
-                <button onclick="generateCode()">Generate New Code</button>
-                
-                <div style="margin-top: 30px;">
-                    <h4>Active Codes</h4>
-                    <div id="codes-list" class="codes-list-container">
-                        <!-- Codes yahan aayenge -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab: Post Signal -->
-            <div id="tab-post" class="admin-tab" style="display: none;">
-                <h3>Send Signal</h3>
-                <div class="form-group" style="margin-top: 15px;">
-                    <label>Message</label>
-                    <textarea id="signal-msg" rows="4" placeholder="Type your signal here..."></textarea>
-                </div>
-                <button onclick="postSignal()">Post Now (Auto Delete after 24h)</button>
-                
-                <div style="margin-top: 30px;">
-                    <h4>Current Active Signals</h4>
-                    <div id="admin-posts-list">
-                        <!-- Posts list for admin -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab: Users -->
-            <div id="tab-users" class="admin-tab" style="display: none;">
-                <h3>Active Users</h3>
-                <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Users currently logged in with valid codes.</p>
-                <div id="users-list">
-                    <!-- Users list -->
-                </div>
-            </div>
-
-            <button class="danger" onclick="logout()" style="margin-top: auto;">Logout</button>
         </div>
 
-        <!-- SCREEN 3: USER PANEL -->
-        <div id="user-screen" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3>Live Signals</h3>
-                <span id="session-timer" style="font-size: 0.8rem; color: var(--primary);">Checking...</span>
+        <!-- Timer with Ring -->
+        <div class="timer-card">
+            <div class="label">Next Period In</div>
+            <div class="progress-ring-container">
+                <svg class="progress-ring" width="180" height="180" viewBox="0 0 180 180">
+                    <circle class="progress-ring-bg" cx="90" cy="90" r="78"/>
+                    <circle class="progress-ring-fill" cx="90" cy="90" r="78"
+                            stroke-dasharray="490.09"
+                            stroke-dashoffset="0"
+                            id="progressCircle"/>
+                </svg>
+                <div class="progress-text" id="ringTimer">30</div>
             </div>
-            
-            <div class="loader" id="feed-loader"></div>
-            <div id="signals-feed">
-                <!-- Signals yahan dikheinenge -->
-                <div class="empty-state">Connecting to server...</div>
-            </div>
+            <div class="timer-unit">Seconds Remaining</div>
+        </div>
 
-            <div style="margin-top: auto; padding-top: 20px;">
-                <button class="secondary" onclick="logout()">Logout</button>
+        <!-- Prediction Section -->
+        <div class="prediction-card">
+            <div class="prediction-title">Current Period Prediction</div>
+            <div class="prediction-result" id="predictionResult">--</div>
+            <div class="prediction-number" id="predictionNumber">Result Number: --</div>
+            <div class="calculation-text" id="calculationText">Waiting for next period...</div>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-card">
+            <div class="history-title">
+                <span>&#128220;</span> Period History & Results
             </div>
+            <div class="history-scroll">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Game Period</th>
+                            <th>Result</th>
+                            <th>Prediction</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <!-- History rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Current Time -->
+        <div class="current-time" id="currentTime">--</div>
+        <div class="timezone-badge">
+            <div class="live-dot"></div>
+            LIVE
         </div>
     </div>
 
-    <!-- SCRIPT PART START -->
-    <!-- Firebase SDK (Modular) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-        // --- 1. CONFIGURATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyAqfguS1ucAtklcl06eB1JIWQr46XMpe7g",
-            authDomain: "safe-chat-c0b9c.firebaseapp.com",
-            databaseURL: "https://safe-chat-c0b9c-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "safe-chat-c0b9c",
-            storageBucket: "safe-chat-c0b9c.appspot.com",
-            messagingSenderId: "119640275300",
-            appId: "1:119640275300:web:20ae984f4af1ffe6a62271"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // Global State
-        let currentUserCode = null;
-        let currentUserRole = null; // 'admin' or 'user'
-        let sessionExpiryTime = 0;
-
-        // --- 2. UTILITY FUNCTIONS ---
-        
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+    <script>
+        // Create background particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (8 + Math.random() * 12) + 's';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.width = particle.style.height = (2 + Math.random() * 4) + 'px';
+            particlesContainer.appendChild(particle);
         }
 
-        function switchScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
+        // Progress ring setup
+        const circle = document.getElementById('progressCircle');
+        const radius = 78;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = 0;
 
-        function generateRandomString(length) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
+        // History management
+        let history = JSON.parse(localStorage.getItem('periodHistory') || '[]');
+        let lastGamePeriod = localStorage.getItem('lastGamePeriod') || '';
+        let lastWebPeriod = localStorage.getItem('lastWebPeriod') || '';
+        let lastPrediction = localStorage.getItem('lastPrediction') || '';
+
+        function saveHistory() {
+            if (history.length > 50) {
+                history = history.slice(-50);
             }
-            return result;
+            localStorage.setItem('periodHistory', JSON.stringify(history));
         }
 
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-
-        function timeAgo(timestamp) {
-            const seconds = Math.floor((Date.now() - timestamp) / 1000);
-            let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + " years ago";
-            interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + " months ago";
-            interval = seconds / 86400;
-            if (interval > 1) return Math.floor(interval) + " days ago";
-            interval = seconds / 3600;
-            if (interval > 1) return Math.floor(interval) + " hours ago";
-            interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + " minutes ago";
-            return "Just now";
-        }
-
-        // --- 3. LOGIC: LOGIN & AUTH ---
-
-        window.handleLogin = async () => {
-            const inputCode = document.getElementById('login-code').value.trim().toUpperCase();
+        function renderHistory() {
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = '';
+            const reversed = [...history].reverse();
             
-            if (!inputCode) {
-                showToast("Please enter a code");
-                return;
+            for (const entry of reversed) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${entry.webPeriod.slice(-5)}</td>
+                    <td style="font-size:0.75rem;opacity:0.6;">${entry.gamePeriod}</td>
+                    <td><span class="badge ${entry.result}">${entry.result}</span></td>
+                    <td><span class="badge ${entry.prediction}" style="opacity:0.7;">${entry.prediction}</span></td>
+                `;
+                tbody.appendChild(tr);
             }
+        }
 
-            // Admin Hardcoded Check (Demo purpose)
-            if (inputCode === 'ADMIN') {
-                currentUserRole = 'admin';
-                switchScreen('admin-screen');
-                loadAdminData();
-                showToast("Welcome Admin");
-                return;
-            }
-
-            // User Code Validation
-            const codeRef = ref(db, 'codes/' + inputCode);
-            const snapshot = await get(codeRef);
-
-            if (snapshot.exists()) {
-                const codeData = snapshot.val();
-                const now = Date.now();
-                
-                // Check Expiry
-                if (now > codeData.expiresAt) {
-                    showToast("Code has expired!");
-                    // Optional: Delete expired code
-                    remove(codeRef);
-                    return;
+        // Prediction calculation
+        function getPrediction(periodNumber) {
+            let hash = 0;
+            for (let i = 0; i < periodNumber.length; i++) {
+                const digit = parseInt(periodNumber[i]);
+                if (!isNaN(digit)) {
+                    hash = ((hash << 5) - hash) + digit * 7;
+                    hash = hash & hash;
                 }
+            }
+            
+            const absHash = Math.abs(hash);
+            const resultDigit = absHash % 10;
+            const result = resultDigit >= 5 ? 'BIG' : 'SMALL';
+            const calcStr = `Hash(${periodNumber.slice(-4)}) % 10 = ${resultDigit} → ${result}`;
+            
+            return {
+                result: result,
+                digit: resultDigit,
+                calc: calcStr
+            };
+        }
 
-                // Login Successful
-                currentUserCode = inputCode;
-                currentUserRole = 'user';
-                sessionExpiryTime = codeData.expiresAt;
-                
-                // Update Last Seen
-                update(ref(db, 'users/' + inputCode), {
-                    lastSeen: now,
-                    status: 'online'
-                });
+        function updatePrediction(gamePeriod, webPeriod) {
+            const pred = getPrediction(gamePeriod);
+            const resultEl = document.getElementById('predictionResult');
+            const numberEl = document.getElementById('predictionNumber');
+            const calcEl = document.getElementById('calculationText');
+            
+            resultEl.textContent = pred.result;
+            resultEl.className = 'prediction-result ' + pred.result;
+            numberEl.textContent = `Result Number: ${pred.digit}`;
+            calcEl.textContent = pred.calc;
+            
+            return pred.result;
+        }
 
-                // Save session to localstorage for auto-login
-                localStorage.setItem('safe_chat_code', inputCode);
+        function addToHistory(gamePeriod, webPeriod, prediction) {
+            const exists = history.some(h => h.gamePeriod === gamePeriod);
+            if (exists) return;
+            
+            const result = getPrediction(gamePeriod).result;
+            
+            history.push({
+                gamePeriod: gamePeriod,
+                webPeriod: webPeriod,
+                prediction: prediction,
+                result: result,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveHistory();
+            renderHistory();
+        }
 
-                switchScreen('user-screen');
-                loadUserFeed();
-                startSessionCheck();
-                
+        // Main update function
+        function updateTimer() {
+            const now = new Date();
+            const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+            const utcTime = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+
+            const utcSeconds = utcTime.getSeconds();
+            const utcMinutes = utcTime.getMinutes();
+            const utcHours = utcTime.getHours();
+
+            let totalPeriods = utcHours * 120 + utcMinutes * 2 + (utcSeconds >= 30 ? 1 : 0);
+            totalPeriods += 1;
+
+            const istSeconds = istTime.getSeconds();
+            const remainingSeconds = 30 - (istSeconds % 30);
+
+            const year = utcTime.getFullYear();
+            const month = String(utcTime.getMonth() + 1).padStart(2, '0');
+            const day = String(utcTime.getDate()).padStart(2, '0');
+            const datePrefix = `${year}${month}${day}`;
+            
+            const webPeriodStr = String(10000 + totalPeriods);
+            const webPeriodNumber = `${datePrefix}${webPeriodStr}`;
+            
+            const periodLast4 = String(totalPeriods).padStart(4, '0');
+            const gamePeriodNumber = `${datePrefix}10005${periodLast4}`;
+
+            document.getElementById('gamePeriodNumber').textContent = gamePeriodNumber;
+            document.getElementById('webPeriodNumber').textContent = webPeriodNumber;
+
+            document.getElementById('ringTimer').textContent = remainingSeconds;
+
+            const progress = remainingSeconds / 30;
+            const offset = circumference * (1 - progress);
+            circle.style.strokeDashoffset = offset;
+
+            const timeStr = istTime.toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('currentTime').textContent = timeStr + ' IST';
+
+            if (remainingSeconds <= 5) {
+                circle.style.stroke = '#ff4444';
+                document.getElementById('ringTimer').style.color = '#ff4444';
+            } else if (remainingSeconds <= 10) {
+                circle.style.stroke = '#ffaa00';
+                document.getElementById('ringTimer').style.color = '#ffaa00';
             } else {
-                showToast("Invalid Code!");
-            }
-        };
-
-        window.logout = () => {
-            if (currentUserRole === 'user' && currentUserCode) {
-                // Update status to offline
-                update(ref(db, 'users/' + currentUserCode), {
-                    status: 'offline'
-                });
-            }
-            localStorage.removeItem('safe_chat_code');
-            currentUserCode = null;
-            currentUserRole = null;
-            document.getElementById('login-code').value = '';
-            switchScreen('login-screen');
-            showToast("Logged Out");
-        };
-
-        // --- 4. LOGIC: SESSION MANAGEMENT ---
-
-        function startSessionCheck() {
-            const timerEl = document.getElementById('session-timer');
-            
-            const checkInterval = setInterval(() => {
-                if (!currentUserCode || currentUserRole !== 'user') {
-                    clearInterval(checkInterval);
-                    return;
-                }
-
-                const now = Date.now();
-                const timeLeft = sessionExpiryTime - now;
-
-                if (timeLeft <= 0) {
-                    clearInterval(checkInterval);
-                    showToast("Session Expired");
-                    logout();
-                } else {
-                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    timerEl.textContent = `Expires in: ${days}d ${hours}h`;
-                }
-            }, 1000); // Update every second
-        }
-
-        // Auto Login on Load
-        window.onload = () => {
-            const savedCode = localStorage.getItem('safe_chat_code');
-            if (savedCode) {
-                document.getElementById('login-code').value = savedCode;
-                handleLogin();
-            }
-        };
-
-        // --- 5. LOGIC: ADMIN FEATURES ---
-
-        window.switchAdminTab = (tabName) => {
-            // Hide all tabs
-            document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
-            // Show selected
-            document.getElementById('tab-' + tabName).style.display = 'block';
-            // Highlight button
-            const btns = document.querySelectorAll('.nav-btn');
-            if(tabName === 'codes') btns[0].classList.add('active');
-            if(tabName === 'post') btns[1].classList.add('active');
-            if(tabName === 'users') btns[2].classList.add('active');
-        };
-
-        function loadAdminData() {
-            // Listen for codes
-            onValue(ref(db, 'codes'), (snapshot) => {
-                const list = document.getElementById('codes-list');
-                list.innerHTML = '';
-                const data = snapshot.val();
-                if (!data) {
-                    list.innerHTML = '<div class="empty-state">No codes generated yet.</div>';
-                    return;
-                }
-
-                Object.keys(data).forEach(key => {
-                    const code = data[key];
-                    const isExpired = Date.now() > code.expiresAt;
-                    const div = document.createElement('div');
-                    div.className = 'card';
-                    div.style.borderLeftColor = isExpired ? '#555' : 'var(--primary)';
-                    div.innerHTML = `
-                        <h3>${key} ${isExpired ? '(Expired)' : ''}</h3>
-                        <p>Days: ${code.durationDays}</p>
-                        <span class="timestamp">Created: ${formatDate(code.createdAt)}</span>
-                    `;
-                    list.appendChild(div);
-                });
-            });
-
-            // Listen for users
-            onValue(ref(db, 'users'), (snapshot) => {
-                const list = document.getElementById('users-list');
-                list.innerHTML = '';
-                const data = snapshot.val();
-                if (!data) {
-                    list.innerHTML = '<div class="empty-state">No active users.</div>';
-                    return;
-                }
-
-                Object.keys(data).forEach(key => {
-                    const user = data[key];
-                    const div = document.createElement('div');
-                    div.className = 'card';
-                    div.innerHTML = `
-                        <h3>User: ${key}</h3>
-                        <p>Status: <span style="color:${user.status === 'online' ? '#00e676' : '#ff5252'}">${user.status}</span></p>
-                        <span class="timestamp">Last Active: ${timeAgo(user.lastSeen)}</span>
-                    `;
-                    list.appendChild(div);
-                });
-            });
-
-            // Listen for posts (for Admin view) WITH DELETE BUTTON
-            onValue(ref(db, 'posts'), (snapshot) => {
-                const list = document.getElementById('admin-posts-list');
-                list.innerHTML = '';
-                const data = snapshot.val();
-                if(!data) {
-                    list.innerHTML = '<div class="empty-state">No signals sent.</div>';
-                    return;
-                }
-                
-                // Convert to array and sort new to old
-                const postsArray = Object.entries(data).sort((a,b) => b[1].timestamp - a[1].timestamp);
-                
-                postsArray.forEach(([key, post]) => {
-                    const div = document.createElement('div');
-                    div.className = 'card';
-                    // Added Delete Button Below
-                    div.innerHTML = `
-                        <p>${post.text}</p>
-                        <span class="timestamp">${formatDate(post.timestamp)}</span>
-                        <button class="danger small-btn" onclick="deletePost('${key}')">Delete Instantly</button>
-                    `;
-                    list.appendChild(div);
-                });
-            });
-            
-            // Initial Cleanup of old posts
-            cleanupExpiredPosts();
-        }
-
-        // --- NEW: DELETE POST FUNCTION ---
-        window.deletePost = async (postId) => {
-            if(confirm("Are you sure you want to delete this signal?")) {
-                try {
-                    await remove(ref(db, 'posts/' + postId));
-                    showToast("Post Deleted Successfully");
-                } catch (error) {
-                    console.error(error);
-                    showToast("Error deleting post");
-                }
-            }
-        };
-
-        window.generateCode = async () => {
-            const duration = parseInt(document.getElementById('code-duration').value);
-            const code = generateRandomString(6); // e.g. "A1B2C3"
-            const now = Date.now();
-            const expiresAt = now + (duration * 24 * 60 * 60 * 1000);
-
-            await set(ref(db, 'codes/' + code), {
-                createdAt: now,
-                durationDays: duration,
-                expiresAt: expiresAt
-            });
-
-            showToast("Code Generated: " + code);
-        };
-
-        window.postSignal = async () => {
-            const msg = document.getElementById('signal-msg').value.trim();
-            if (!msg) {
-                showToast("Message cannot be empty");
-                return;
+                circle.style.stroke = '#00ff88';
+                document.getElementById('ringTimer').style.color = '#00ff88';
             }
 
-            const now = Date.now();
-            // Store post
-            await push(ref(db, 'posts'), {
-                text: msg,
-                timestamp: now
-            });
+            const prediction = updatePrediction(gamePeriodNumber, webPeriodNumber);
 
-            document.getElementById('signal-msg').value = '';
-            showToast("Signal Posted Successfully");
-        };
-
-        // --- 6. LOGIC: USER FEATURES ---
-
-        function loadUserFeed() {
-            const feedContainer = document.getElementById('signals-feed');
-            const loader = document.getElementById('feed-loader');
+            // When period changes, save previous to history
+            if (lastGamePeriod !== '' && lastGamePeriod !== gamePeriodNumber) {
+                addToHistory(lastGamePeriod, lastWebPeriod, lastPrediction);
+            }
             
-            loader.style.display = 'block';
-
-            onValue(ref(db, 'posts'), (snapshot) => {
-                loader.style.display = 'none';
-                feedContainer.innerHTML = '';
-                
-                cleanupExpiredPosts(); // Ensure deleted
-
-                const data = snapshot.val();
-                if (!data) {
-                    feedContainer.innerHTML = '<div class="empty-state" style="font-size:1.2rem; color: #00e676;">Signal Coming Soon...</div>';
-                    return;
-                }
-
-                let hasContent = false;
-                // Sort: Newest first
-                const postsArray = Object.entries(data).sort((a,b) => b[1].timestamp - a[1].timestamp);
-
-                postsArray.forEach(([key, post]) => {
-                    hasContent = true;
-                    const div = document.createElement('div');
-                    div.className = 'card';
-                    div.style.borderLeft = "none";
-                    div.style.borderBottom = "2px solid var(--primary)";
-                    div.innerHTML = `
-                        <h3 style="color: var(--primary)">NEW SIGNAL</h3>
-                        <p style="font-size: 1.1rem; color: white; margin-top:10px;">${post.text}</p>
-                        <span class="timestamp">${formatDate(post.timestamp)}</span>
-                    `;
-                    feedContainer.appendChild(div);
-                });
-
-                if(!hasContent) {
-                    feedContainer.innerHTML = '<div class="empty-state" style="font-size:1.2rem; color: #00e676;">Signal Coming Soon...</div>';
-                }
-            });
-        }
-
-        // --- 7. SYSTEM LOGIC: AUTO DELETE POSTS ---
-        // Logic: Check all posts, if timestamp > 24h, remove them.
-        async function cleanupExpiredPosts() {
-            const postsRef = ref(db, 'posts');
-            const snapshot = await get(postsRef);
-            
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                const now = Date.now();
-                const oneDayMs = 24 * 60 * 60 * 1000;
-                
-                let updates = {};
-                let dirty = false;
-
-                Object.keys(data).forEach(key => {
-                    if (now - data[key].timestamp > oneDayMs) {
-                        updates[key] = null; // Mark for deletion
-                        dirty = true;
-                    }
-                });
-
-                if (dirty) {
-                    await update(postsRef, updates);
-                    console.log("Cleaned up expired posts");
-                }
+            // Update tracking for current period
+            if (lastGamePeriod !== gamePeriodNumber) {
+                lastGamePeriod = gamePeriodNumber;
+                lastWebPeriod = webPeriodNumber;
+                lastPrediction = prediction;
+                localStorage.setItem('lastGamePeriod', lastGamePeriod);
+                localStorage.setItem('lastWebPeriod', lastWebPeriod);
+                localStorage.setItem('lastPrediction', lastPrediction);
             }
         }
 
+        // Initial render
+        renderHistory();
+
+        // Update immediately and then every second
+        updateTimer();
+        setInterval(updateTimer, 1000);
     </script>
-    <!-- SCRIPT PART END -->
 </body>
 </html>
